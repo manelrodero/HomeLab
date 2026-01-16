@@ -1,5 +1,6 @@
-# Archivos de entorno con secretos
+# Archivos de entorno y secretos
 .env
+Proxmox/scripts/proxmox.env
 secrets.yaml
 
 # Claves y certificados
