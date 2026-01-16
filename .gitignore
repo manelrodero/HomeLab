@@ -1,0 +1,11 @@
+# Archivos de entorno con secretos
+.env
+secrets.yaml
+
+# Claves y certificados
+*.key
+*.pem
+
+# Logs y archivos temporales
+*.log
+Temp/
