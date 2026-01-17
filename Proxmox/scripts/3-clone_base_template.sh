@@ -82,8 +82,6 @@ fi
 # ============================
 # PASO 3: DIRECCIÓN IP
 # ============================
-clear
-
 valid_last_octet() {
   [[ "$1" =~ ^[0-9]{1,3}$ ]] || return 1
   (( $1 >= 1 && $1 <= 254 )) || return 1
@@ -108,8 +106,6 @@ pct set "$new_ct_id" -net0 name=eth0,bridge=vmbr0,ip="$ip",gw="$GATEWAY"
 # ============================
 # PASO 4: HARDWARE
 # ============================
-clear
-
 while true; do
   echo -e "${GREEN}Introduce el número de cores (ej: 2):${NC}"
   read -p "> " cores
@@ -146,8 +142,6 @@ pct set "$new_ct_id" -cores "$cores" -memory "$memory" -swap "$swap"
 # ============================
 # PASO 5: DISCO
 # ============================
-clear
-
 current_gb=$(pct config "$new_ct_id" | grep -oP 'rootfs:.*?,size=\K[0-9]+(?=G)')
 
 echo -e "${CYAN}Tamaño actual del disco de $new_ct_id: ${GREEN}${current_gb}G${NC}"
