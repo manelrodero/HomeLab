@@ -248,3 +248,47 @@ Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 test@new-lxc:~$
 ```
+
+## (Opcional) Añadir Mount Point para RSync
+
+Opcionalmente se puede añadir un Mount Point al contenedor LXC para que el script [`backup_dockers.sh`](./scripts/backup_dockers.sh) lo use como destino de las **copias de seguridad** de los contenedores Docker que se ejecuten en ese LXC.
+
+Para hacerlo, se ejecuta el script [`add_rsync_lxc.sh`](./scripts/add_rsync_lxc.sh) de la siguiente manera:
+
+```bash
+# Acceder al directorio de scripts
+cd scripts
+
+# Añadir Mount Point al LXC
+bash add_rsync_lxc.sh
+```
+
+Un ejemplo de ejecución se muestra a continuación:
+
+```plaintext
+Introduce el ID del contenedor LXC:
+> 100
+Directorio creado: /backups/rsync/100-new-lxc
+Configuración completada para el contenedor 100 (new-lxc).
+Se ha añadido el punto de montaje en mp0 → /mnt/rsync
+```
+
+El punto de montaje añadido se puede ver en la interfaz gráfica de Proxmox (**Datacenter** &rarr; **Servidor** &rarr; **Contenedor LXC** &rarr; **Resources**).
+
+Tambíen se puede realizar un `cat` del fichero de configuración del contenedor LXC tal como se muestra en el siguiente ejemplo:
+
+```plaintext
+root@pve:~/HomeLab/Proxmox/scripts# cat /etc/pve/lxc/100.conf
+arch: amd64
+cores: 2
+features: nesting=1,keyctl=1
+hostname: new-lxc
+memory: 1024
+mp0: /backups/rsync/100-new-lxc,mp=/mnt/rsync
+net0: name=eth0,bridge=vmbr0,gw=10.10.0.1,hwaddr=BC:XX:XX:XX:XX:EB,ip=10.10.0.100/24,type=veth
+onboot: 1
+ostype: debian
+rootfs: local-lvm:vm-100-disk-0,size=2G
+swap: 512
+unprivileged: 1
+```
