@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 
-# Add RSYNC Mount Point v1.1 (2026-01-17)
+# Add RSYNC Mount Point v1.2 (2026-01-17)
 
 # ============================
 # Cargar configuración externa
@@ -70,9 +70,29 @@ fi
 chown 100000:101000 "$BACKUP_DIR"
 
 # ============================
+# Comprobar si ya existe un mount point igual
+# ============================
+CONFIG=$(pct config "$CTID")
+
+# 1) ¿Ya existe un mpX con ese BACKUP_DIR?
+if echo "$CONFIG" | grep -q "$BACKUP_DIR"; then
+    echo -e "${RED}Este contenedor YA tiene un mount point usando:${NC}"
+    echo "  $BACKUP_DIR"
+    echo -e "${CYAN}No se añade un duplicado.${NC}"
+    exit 0
+fi
+
+# 2) ¿Ya existe un mpX con mp=/mnt/rsync?
+if echo "$CONFIG" | grep -q "mp=/mnt/rsync"; then
+    echo -e "${RED}Este contenedor YA tiene un mount point en /mnt/rsync.${NC}"
+    echo -e "${CYAN}No se añade un duplicado.${NC}"
+    exit 0
+fi
+
+# ============================
 # Buscar siguiente índice mpX
 # ============================
-NEXT_MP=$(pct config "$CTID" | grep -E '^mp[0-9]:' | awk -F: '{print $1}' | sort -V | tail -n1)
+NEXT_MP=$(echo "$CONFIG" | grep -E '^mp[0-9]:' | awk -F: '{print $1}' | sort -V | tail -n1)
 
 if [ -z "$NEXT_MP" ]; then
     MP_INDEX="mp0"
