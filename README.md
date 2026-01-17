@@ -10,7 +10,7 @@ Si tengo información más detallada en algún artículo de [mi blog personal](h
 
 ## Servidores
 
-Mi pequeño laboratorio en casa está formado por los tres "**servidores**" siguientes:
+Mi pequeño laboratorio en casa está formado por tres "**servidores**":
 
 * **Raspberry Pi 4** ejecutando **Raspberry Pi OS Lite**
 * **Dell OptiPlex 7050 Micro** ejecutando **Proxmox Virtual Environment**
