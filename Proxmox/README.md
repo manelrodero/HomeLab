@@ -62,7 +62,7 @@ El siguiente procedimiento permite crear una plantilla base de LXC (sistema oper
 cd scripts
 
 # Crear el contenedor LXC que servirá como plantilla
-./1-create_base_template.sh
+bash 1-create_base_template.sh
 ```
 
 La ejecución del script [`1-create_base_template.sh`](./scripts/1-create_base_template.sh) utilizará la configuración definida en el fichero `proxmox.env` y las respuestas introducidas manualmente para los siguientes parámetros:
@@ -164,7 +164,7 @@ Se pueden crear nuevos contenedores LXC de forma rápida clonando la plantilla b
 cd scripts
 
 # Clonar la plantila base en un nuevo contenedor LXC
-./3-clone_base_template.sh
+bash 3-clone_base_template.sh
 ```
 
 A continuación se puede ver un ejemplo de ejecución:
