@@ -1,0 +1,216 @@
+# compose.yaml v31 - 2026-01-18, (c) Manel Rodero & Robert Pérez
+
+services:
+  nordvpn:
+    build:
+      # How to build the NordVPN Docker image
+      # https://support.nordvpn.com/hc/en-us/articles/20465811527057
+      context: nordvpn-custom
+    image: nordvpn-custom
+    container_name: nordvpn
+    hostname: nordvpn
+    networks:
+      - vpntorrent
+    ports:
+      - 8080:8080 # qBittorrent
+      - 9696:9696 # Prowlarr
+      - 7878:7878 # Radarr
+      - 8989:8989 # Sonarr
+      - 6767:6767 # Bazarr
+      - 8686:8686 # Lidarr
+      - 5030:5030 # Soulseek
+      - 8191:8191 # Flaresolverr
+    environment:
+      - NORDVPN_TOKEN=${NORDVPN_TOKEN}
+      - NORDVPN_CONNECT=es
+      - NORDVPN_TECHNOLOGY=NordLynx
+      - NORDVPN_NETWORK=${NORDVPN_NETWORK}
+      - NORDVPN_DNS=103.86.96.100 103.86.99.10
+      - NORDVPN_P2P=S
+    volumes:
+      - /usr/share/zoneinfo/Europe/Madrid:/etc/localtime:ro
+      - ./volumes/nordvpn_logs:/var/log/nordvpn
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    sysctls:
+      # Disable IPv6 on Linux
+      # https://support.nordvpn.com/hc/en-us/articles/20164669224337
+      - net.ipv6.conf.all.disable_ipv6=1
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: service:nordvpn
+    depends_on:
+      - nordvpn
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Madrid
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - /usr/share/zoneinfo/Europe/Madrid:/etc/localtime:ro
+      - ./volumes/qbittorrent_config:/config
+      - /mnt/media/torrents:/mnt/media/torrents
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    network_mode: service:nordvpn
+    depends_on:
+      - nordvpn
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Madrid
+    volumes:
+      - /usr/share/zoneinfo/Europe/Madrid:/etc/localtime:ro
+      - ./volumes/prowlarr_config:/config
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    network_mode: service:nordvpn
+    depends_on:
+      - nordvpn
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Madrid
+    volumes:
+      - /usr/share/zoneinfo/Europe/Madrid:/etc/localtime:ro
+      - ./volumes/radarr_config:/config
+      - /mnt/media/movies:/mnt/media/movies
+      - /mnt/media/movies_vo:/mnt/media/movies_vo
+      - /mnt/media/torrents:/mnt/media/torrents
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    network_mode: service:nordvpn
+    depends_on:
+      - nordvpn
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Madrid
+    volumes:
+      - /usr/share/zoneinfo/Europe/Madrid:/etc/localtime:ro
+      - ./volumes/sonarr_config:/config
+      - /mnt/media/tvseries:/mnt/media/tvseries
+      - /mnt/media/tvseries_vo:/mnt/media/tvseries_vo
+      - /mnt/media/torrents:/mnt/media/torrents
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    network_mode: service:nordvpn
+    depends_on:
+      - nordvpn
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Madrid
+    volumes:
+      - /usr/share/zoneinfo/Europe/Madrid:/etc/localtime:ro
+      - ./volumes/bazarr_config:/config
+      - /mnt/media/movies:/mnt/media/movies
+      - /mnt/media/movies_vo:/mnt/media/movies_vo
+      - /mnt/media/tvseries:/mnt/media/tvseries
+      - /mnt/media/tvseries_vo:/mnt/media/tvseries_vo
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    network_mode: service:nordvpn
+    depends_on:
+      - nordvpn
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Madrid
+    volumes:
+      - /usr/share/zoneinfo/Europe/Madrid:/etc/localtime:ro
+      - ./volumes/lidarr_config:/config
+      - /mnt/media/music:/mnt/media/music
+      - /mnt/media/torrents:/mnt/media/torrents
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  soulseek:
+    image: slskd/slskd
+    container_name: soulseek
+    network_mode: service:nordvpn
+    depends_on:
+      - nordvpn
+    user: ${PUID}:${PGID}
+#    ports:
+#      - "5030:5030" # Acceso a la interfaz web vía HTTP
+#      - "5031:5031" # Acceso a la interfaz web vía HTTPS (autofirmado)	
+#      - "50300:50300" # Comunicación con la red Soulseek
+    environment:
+      - SLSKD_REMOTE_CONFIGURATION=true
+    volumes:
+      - ./volumes/soulseek_app:/app
+      - /mnt/media/soulseek:/soulseek
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    network_mode: service:nordvpn
+    depends_on:
+      - nordvpn
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=Europe/Madrid
+    restart: unless-stopped
+
+networks:
+  vpntorrent:
+    name: vpntorrent
+    driver: bridge
