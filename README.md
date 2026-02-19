@@ -10,11 +10,16 @@ Si tengo información más detallada en algún artículo de [mi blog personal](h
 
 ## Servidores
 
-Mi pequeño laboratorio en casa está formado por tres "**servidores**":
+Mi pequeño laboratorio en casa está formado por tres "**servidores**" en los que se ejecutan múltiples [aplicaciones](./Apps/README.md) y [scripts](./Scripts/README.md):
 
 * **Raspberry Pi 4** ejecutando **Raspberry Pi OS Lite**
 * **Dell OptiPlex 7050 Micro** ejecutando **Proxmox Virtual Environment**
 * **PC clónico** con formato torre ejecutando **Unraid**
+
+Y dos ordenadores "**cliente**" desde los que trabajo habitualmente:
+
+* **PC clónico** con formato torre ejecutando **Windows 11**
+* **Dell Precision 7530** ejecutando **Windows Server 2022**
 
 ## Descargo de responsabilidad (_Disclaimer_)
 
@@ -22,9 +27,9 @@ El contenido de este repositorio —incluyendo código, scripts, configuraciones
 
 El uso que hagas de esta información es **exclusivamente tu responsabilidad**. Antes de aplicar cualquier cambio en tu entorno, especialmente en sistemas de producción o infraestructuras críticas, asegúrate de:
 
-- Revisar y comprender completamente el funcionamiento del código o configuración.  
-- Adaptarlo a tus necesidades y a tu contexto técnico.  
-- Probarlo en entornos controlados o de pruebas.  
+* Revisar y comprender completamente el funcionamiento del código o configuración.  
+* Adaptarlo a tus necesidades y a tu contexto técnico.  
+* Probarlo en entornos controlados o de pruebas.  
 
 El autor **no se hace responsable** de daños, pérdidas de datos, interrupciones de servicio, problemas de seguridad o cualquier otro perjuicio derivado del uso, mal uso o interpretación del contenido de este repositorio.
 
