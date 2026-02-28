@@ -51,43 +51,50 @@ function Write-Log {
         [bool]$InitFile = $false
     )
 
-    # Determinar ruta del log si no s'ha especificat
-    # 1) Intune: $env:ProgramData\Microsoft\IntuneManagementExtension\Logs
-    # 2) Subdirectori del script: $PSScriptRoot\Logs
-    # 3) $env:TEMP\Logs
-    $defaultLogDir = "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs"
-    if (-not (Test-Path $defaultLogDir)) {
-        $defaultLogDir = "$PSScriptRoot\Logs"
-        if (-not (Test-Path $defaultLogDir)) {
-            $defaultLogDir = "$env:TEMP\Logs"
-            if (-not (Test-Path $defaultLogDir)) {
-                New-Item -Path $defaultLogDir -ItemType Directory | Out-Null
-            }
-        }
-    }
-    $LogFile = "$defaultLogDir\UPC-$LogName.log"
-
     if ($UseCMTrace) {
         # Format CMTrace
         $typeMap = @{ "Info" = "1"; "Warning" = "2"; "Error" = "3" }
         $timestamp = Get-Date
-        $logEntry = "<![LOG[$Message]LOG]!>" +
-        "<time=""{0}"" date=""{1}"" component=""{2}"" context=""{3}"" type=""{4}"" thread="""" file="""">" -f `
-            $timestamp.ToString("HH:mm:ss.ffffff"),
-        $timestamp.ToString("M-d-yyyy"),
-        $Component,
-        $env:USERNAME,
-        $typeMap[$Level]
+        $logEntry = "<![LOG[$Message]LOG]!><time=""{0}"" date=""{1}"" component=""{2}"" context=""{3}"" type=""{4}"" thread="""" file="""">" -f `
+            $timestamp.ToString("HH:mm:ss.ffffff"), $timestamp.ToString("M-d-yyyy"), $Component, $env:USERNAME, $typeMap[$Level]
     } else {
         # Format text pla amb timestamp
         $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
         $logEntry = "$timestamp [$Level] $Component :: $Message"
     }
 
-    if ($InitFile) {
-        $logEntry | Out-File -FilePath $LogFile -Encoding utf8
-    } else {
-        $logEntry | Out-File -FilePath $LogFile -Append -Encoding utf8
+    # Determinar ruta del log si no s'ha especificat
+    # 1) Intune: $env:ProgramData\Microsoft\IntuneManagementExtension\Logs
+    # 2) Subdirectori del script: $PSScriptRoot\Logs
+    # 3) $env:TEMP\Logs
+    # 4) $env:TEMP
+    $LogPaths = @(
+        "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs",
+        "$PSScriptRoot\Logs",
+        "$env:TEMP\Logs",
+        "$env:TEMP"
+    )
+
+    foreach ($path in $LogPaths) {
+        if ([string]::IsNullOrWhiteSpace($path)) { continue }
+
+        try {
+            if (-not (Test-Path $path)) {
+                New-Item -Path $path -ItemType Directory -Force -ErrorAction Stop | Out-Null
+            }
+
+            $FullFile = Join-Path $path "UPC-$LogName.log"
+
+            if ($InitFile) {
+                $logEntry | Out-File -FilePath $FullFile -Encoding utf8 -Force -ErrorAction Stop
+            } else {
+                $logEntry | Out-File -FilePath $FullFile -Append -Encoding utf8 -ErrorAction Stop
+            }
+
+            break
+        } catch {
+            continue
+        }
     }
 
     if ($Output) {
