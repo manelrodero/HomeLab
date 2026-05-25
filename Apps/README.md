@@ -8,8 +8,8 @@ La mayoría de los despliegues están basados en contenedores Docker para garant
 
 | Aplicación | Servidor / Host | Tecnología | Descripción |
 | :--- | :--- | :--- | :--- |
-| 🛡️ [NordVPN](./nordvpn/README.md) | Proxmox | Docker / LXC | Cliente VPN para asegurar el tráfico de contenedores específicos |
-| 🚀 [Tailscale](./tailscale/README.md) | Raspberry Pi 4 | Docker (Host) | VPN Mesh con funciones de Subnet Router y Exit Node. |
+| [NordVPN](./nordvpn/README.md) | Proxmox | Docker / LXC | Cliente VPN para asegurar el tráfico de contenedores específicos |
+| [Tailscale](./tailscale/README.md) | Raspberry Pi 4 | Docker (Host) | VPN Mesh con funciones de Subnet Router y Exit Node. |
 
 ## Estructura del repositorio
 
