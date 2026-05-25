@@ -4,4 +4,4 @@ La mayoría de las aplicaciones que estoy ejecutando actualmente en mi HomeLab s
 
 | Aplicación | Servidor | Tecnología | Descripción |
 | --- | --- | --- | --- |
-| [NordVPN](./Apps/nordvpn/README.md) | Proxmox | Docker/LXC | Red Privada Virtual |
+| [NordVPN](./nordvpn/README.md) | Proxmox | Docker/LXC | Red Privada Virtual |

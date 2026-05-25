@@ -23,7 +23,7 @@ Y dos ordenadores "**cliente**" desde los que trabajo habitualmente:
 
 ## Descargo de responsabilidad (_Disclaimer_)
 
-El contenido de este repositorio —incluyendo código, scripts, configuraciones, documentación y cualquier otro recurso— se proporciona **únicamente con fines informativos y educativos**. Todo el material se ofrece **“tal cual”**, sin garantías de ningún tipo, explícitas o implícitas.
+El contenido de este repositorio —incluyendo código, scripts, configuraciones, documentación y cualquier otro recurso— se proporciona **únicamente con fines informativos y educativos**. Todo el material se ofrece **"tal cual"**, sin garantías de ningún tipo, explícitas o implícitas.
 
 El uso que hagas de esta información es **exclusivamente tu responsabilidad**. Antes de aplicar cualquier cambio en tu entorno, especialmente en sistemas de producción o infraestructuras críticas, asegúrate de:
 
