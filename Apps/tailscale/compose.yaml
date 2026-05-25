@@ -1,0 +1,26 @@
+# compose.yaml v2 - 2026-05-25, (c) Manel Rodero
+
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.92.5
+    container_name: tailscale
+    hostname: tailscale-rpi4
+    # Network mode 'host' para gestionar interfaces de red y enrutar tráfico externo (exit node)
+    network_mode: host
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_ENABLE_METRICS=false
+      - TS_HOSTNAME=rpi4
+      - TS_ROUTES=${HOMELAB_NETWORK}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_EXTRA_ARGS=--advertise-exit-node
+    volumes:
+      - ./volumes/tailscale_state:/var/lib/tailscale
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
