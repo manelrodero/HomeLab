@@ -1,8 +1,17 @@
+# ----------------------------
+# Stage 1: Builder
+# ----------------------------
+
 FROM python:3.12-slim AS builder
 
 WORKDIR /app
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# ----------------------------
+# Stage 2: Final image
+# ----------------------------
 
 FROM python:3.12-slim
 
@@ -14,7 +23,9 @@ COPY app.py .
 ENV PYTHONUNBUFFERED=1
 ENV SYNC_INTERVAL_SECONDS=3600
 
+# HEALTHCHECK using Python (no curl needed)
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-  CMD curl -f http://localhost:8080/health || exit 1
+  CMD python3 -c "import urllib.request,sys; \
+    sys.exit(0) if urllib.request.urlopen('http://localhost:8080/health').status==200 else sys.exit(1)"
 
 CMD ["python", "app.py"]
