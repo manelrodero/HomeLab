@@ -1,0 +1,15 @@
+services:
+  nextdns-sync:
+    build:
+      context: build
+      dockerfile: dockerfile
+    container_name: nextdns-sync
+    environment:
+      - NEXTDNS_CONFIG_ID=${NEXTDNS_CONFIG_ID}
+      - NEXTDNS_API_KEY=${NEXTDNS_API_KEY}
+      - SYNC_INTERVAL_SECONDS=${SYNC_INTERVAL_SECONDS}
+      - LOG_LEVEL=${LOG_LEVEL}
+    volumes:
+      - /usr/share/zoneinfo/Europe/Madrid:/etc/localtime:ro
+      - ../adguard/adguard_conf/AdGuardHome.yaml:/app/AdGuardHome.yaml:ro
+    restart: always
