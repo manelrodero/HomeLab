@@ -15,14 +15,17 @@ import threading
 # ----------------------------
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+VERSION = os.getenv("APP_VERSION", "dev")
 
 logging.basicConfig(
     level=LOG_LEVEL,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 
 log = logging.getLogger("nextdns-sync")
+log.info(f"Starting nextdns-sync application v{VERSION}")
 
 # ----------------------------
 # Healthcheck server
@@ -37,6 +40,11 @@ class HealthHandler(BaseHTTPRequestHandler):
         else:
             self.send_response(404)
             self.end_headers()
+    def log_message(self, format, *args):
+        # Only log healthcheck requests when DEBUG is enabled
+        if log.isEnabledFor(logging.DEBUG):
+            log.debug("Healthcheck request: %s" % (format % args))
+        return
 
 def start_health_server():
     server = HTTPServer(("0.0.0.0", 8080), HealthHandler)
